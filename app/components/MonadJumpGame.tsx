@@ -60,6 +60,15 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
   const monadLogoRef = useRef<HTMLImageElement | null>(null);
   const watermarkRef = useRef<HTMLImageElement | null>(null);
   
+  // Store playerAddress in ref to prevent React state issues
+  const playerAddressRef = useRef(playerAddress);
+  
+  // Update ref when prop changes
+  useEffect(() => {
+    console.log('MonadJumpGame: PlayerAddress prop changed to:', playerAddress);
+    playerAddressRef.current = playerAddress;
+  }, [playerAddress]);
+  
   // Farcaster integration
   const { shareGame, sendNotification } = useFarcaster();
   
@@ -881,19 +890,21 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
   const endGame = async () => {
     // Store the final score before changing state
     console.log('End game - Current score:', gameStateRef.current.currentScore, 'Max height:', gameStateRef.current.maxHeight);
-    console.log('PlayerAddress:', playerAddress);
+    console.log('PlayerAddress prop:', playerAddress);
+    console.log('PlayerAddress ref:', playerAddressRef.current);
     console.log('Score:', score);
     
     // Use the game's actual score, not the React state
     const finalScore = gameStateRef.current.currentScore;
+    const currentPlayerAddress = playerAddressRef.current;
     gameStateRef.current.finalScore = finalScore;
     gameStateRef.current.currentState = 'gameover';
     
     // Submit score to secure API endpoint
-    if (finalScore > 0 && playerAddress) {
+    if (finalScore > 0 && currentPlayerAddress) {
       console.log('Attempting to submit score...');
       try {
-        const result = await submitPlayerScore(playerAddress, finalScore, 1);
+        const result = await submitPlayerScore(currentPlayerAddress, finalScore, 1);
         console.log('Score submission result:', result);
         
         if (result.success) {
@@ -917,8 +928,8 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       
       sendNotification(`New score: ${finalScore}!`);
     } else {
-      console.log('Score submission skipped - FinalScore:', finalScore, 'PlayerAddress:', playerAddress);
-      if (!playerAddress) {
+      console.log('Score submission skipped - FinalScore:', finalScore, 'PlayerAddress:', currentPlayerAddress);
+      if (!currentPlayerAddress) {
         toast.error('Please sign in to submit scores');
       }
     }

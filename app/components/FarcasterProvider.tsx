@@ -3,9 +3,16 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { sdk } from '@farcaster/miniapp-sdk';
 
+interface FarcasterUser {
+  fid?: number;
+  username?: string;
+  displayName?: string;
+  pfpUrl?: string;
+}
+
 interface FarcasterContextType {
   isReady: boolean;
-  user: any;
+  user: FarcasterUser | null;
   sendNotification: (message: string) => void;
   shareGame: (score?: number) => void;
 }
@@ -21,7 +28,7 @@ export const useFarcaster = () => useContext(FarcasterContext);
 
 export default function FarcasterProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<FarcasterUser | null>(null);
 
   useEffect(() => {
     async function initFarcaster() {
@@ -33,7 +40,7 @@ export default function FarcasterProvider({ children }: { children: React.ReactN
         console.log('Farcaster context:', context);
         
         if (context?.user) {
-          setUser(context.user);
+          setUser(context.user as FarcasterUser);
           console.log('Farcaster user:', context.user);
         }
         
@@ -56,7 +63,10 @@ export default function FarcasterProvider({ children }: { children: React.ReactN
   const sendNotification = async (message: string) => {
     try {
       // Using new SDK
-      await sdk.actions.sendNotification({ message });
+      if ('sendNotification' in sdk.actions) {
+        const notificationActions = sdk.actions as { sendNotification: (params: { message: string }) => Promise<void> };
+        await notificationActions.sendNotification({ message });
+      }
       console.log('Notification sent:', message);
     } catch (error) {
       console.log('Notification not sent:', error);
@@ -74,7 +84,7 @@ export default function FarcasterProvider({ children }: { children: React.ReactN
       // Use the new composeCast method
       await sdk.actions.composeCast({
         text,
-        embeds: [{ url: window.location.href }]
+        embeds: [window.location.href]
       });
       
       console.log('Cast composed successfully');

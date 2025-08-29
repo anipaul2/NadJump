@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { TransactionQueue } from '../lib/score-api';
 import { GAME_CONFIG } from '../lib/game-config';
 import { useFarcaster } from './FarcasterProvider';
@@ -46,7 +46,7 @@ export default function SpaceShooterGame({ playerAddress }: SpaceShooterGameProp
   const [lastSubmittedScore, setLastSubmittedScore] = useState(0);
   
   // Farcaster integration
-  const { shareGame, sendNotification } = useFarcaster();
+  const { shareGame } = useFarcaster();
   
   // Transaction queue for handling retries
   const transactionQueueRef = useRef<TransactionQueue | null>(null);
@@ -98,9 +98,9 @@ export default function SpaceShooterGame({ playerAddress }: SpaceShooterGameProp
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []);
+  }, [gameOver]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const startGame = () => {
+  const startGame = useCallback(() => {
     setGameStarted(true);
     setGameOver(false);
     setScore(0);
@@ -120,9 +120,9 @@ export default function SpaceShooterGame({ playerAddress }: SpaceShooterGameProp
       cancelAnimationFrame(gameLoopRef.current);
     }
     gameLoop();
-  };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const gameLoop = () => {
+  const gameLoop = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -223,7 +223,7 @@ export default function SpaceShooterGame({ playerAddress }: SpaceShooterGameProp
     });
 
     // Collision detection - enemy bullets vs player
-    gameState.enemyBullets.forEach((bullet, bulletIndex) => {
+    gameState.enemyBullets.forEach((bullet) => {
       if (bullet.x < gameState.player.x + gameState.player.width &&
           bullet.x + bullet.width > gameState.player.x &&
           bullet.y < gameState.player.y + gameState.player.height &&
@@ -272,7 +272,7 @@ export default function SpaceShooterGame({ playerAddress }: SpaceShooterGameProp
     if (gameState.isRunning) {
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     }
-  };
+  }, []);
 
   useEffect(() => {
     // Initial canvas setup

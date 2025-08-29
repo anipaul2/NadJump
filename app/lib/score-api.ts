@@ -78,13 +78,14 @@ export async function submitPlayerScore(
   try {
     // Get session token if not provided
     if (!sessionToken) {
-      sessionToken = await getSessionToken(playerAddress);
-      if (!sessionToken) {
+      const token = await getSessionToken(playerAddress);
+      if (!token) {
         return {
           success: false,
           error: 'Failed to authenticate. Please try again.',
         };
       }
+      sessionToken = token;
     }
 
     const response = await fetch('/api/update-player-data', {
@@ -309,7 +310,7 @@ export class TransactionQueue {
     });
     
     // Create combined transactions per player
-    batchByPlayer.forEach((transactions, playerAddress) => {
+    batchByPlayer.forEach((transactions) => {
       if (transactions.length === 1) {
         // Single transaction, add as is
         this.queue.push(transactions[0]);

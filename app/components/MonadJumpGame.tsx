@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 // Removed TransactionQueue - now using secure server-side API
-import { GAME_CONFIG } from '../lib/game-config';
 import { useFarcaster } from './FarcasterProvider';
 import toast from 'react-hot-toast';
 
@@ -11,7 +10,6 @@ let GAME_HEIGHT = 600;
 const GRAVITY = 0.5;
 const JUMP_STRENGTH = -18;
 const PLAYER_SPEED = 6;
-const CAMERA_SMOOTH = 0.08;
 
 // Game objects interfaces
 interface Player {
@@ -48,21 +46,7 @@ interface Particle {
   size: number;
 }
 
-interface PowerUp {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  emoji: string;
-  color: string;
-}
 
-const POWER_UPS: PowerUp[] = [
-  { id: 'rocket', name: 'Rocket Boost', price: 100, description: 'Super jump power!', emoji: '🚀', color: '#ef4444' },
-  { id: 'shield', name: 'Shield', price: 150, description: 'Protection from falls', emoji: '🛡️', color: '#3b82f6' },
-  { id: 'magnet', name: 'Coin Magnet', price: 200, description: 'Attract coins', emoji: '🧲', color: '#8b5cf6' },
-  { id: 'slowtime', name: 'Slow Time', price: 250, description: 'Slow motion effect', emoji: '⏰', color: '#10b981' }
-];
 
 interface MonadJumpGameProps {
   playerAddress?: string;
@@ -242,19 +226,6 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
   };
 
   // Drawing utilities
-  const drawRoundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number, fillColor?: string, strokeColor?: string) => {
-    ctx.beginPath();
-    ctx.roundRect(x, y, width, height, radius);
-    if (fillColor) {
-      ctx.fillStyle = fillColor;
-      ctx.fill();
-    }
-    if (strokeColor) {
-      ctx.strokeStyle = strokeColor;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
-  };
 
   const drawGradientRect = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, color1: string, color2: string, radius: number = 0) => {
     const gradient = ctx.createLinearGradient(x, y, x, y + height);
@@ -579,7 +550,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
   };
 
   // Handle mouse/touch input
-  const handleInput = (event: MouseEvent | TouchEvent) => {
+  const handleInput = useCallback((event: MouseEvent | TouchEvent) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -640,7 +611,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
         }
       }
     }
-  };
+  }, [shareGame]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Game mechanics
   const startGame = () => {
@@ -669,7 +640,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     // Don't reset points - they accumulate across games
   };
 
-  const updateGame = () => {
+  const updateGame = useCallback(() => {
     const gameState = gameStateRef.current;
     gameState.animTime += 1;
 
@@ -693,7 +664,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     }
 
     gameLoopRef.current = requestAnimationFrame(updateGame);
-  };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const updateGameLogic = () => {
     const { player, platforms, particles, keys, camera } = gameStateRef.current;
@@ -1083,7 +1054,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(gameLoopRef.current);
     };
-  }, []);
+  }, [handleInput, updateGame]);
 
   return (
     <canvas

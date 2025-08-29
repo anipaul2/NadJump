@@ -1,0 +1,10 @@
+{
+  "miniapp": {
+    "version": "1",
+    "name": "NadJump",
+    "iconUrl": "https://your-app-url.vercel.app/monad-logo.svg",
+    "homeUrl": "https://your-app-url.vercel.app",
+    "imageUrl": "https://your-app-url.vercel.app/monad-logo.svg",
+    "description": "A fun jumping game built for Monad Games ID - compete on the leaderboard!"
+  }
+}

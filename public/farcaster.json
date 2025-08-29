@@ -1,0 +1,9 @@
+{
+  "name": "Monad Jump",
+  "version": "1.0.0",
+  "description": "Jump the Monad bottle through platforms to reach new heights! Compete on the leaderboard and earn rewards.",
+  "homepage_url": "https://your-domain.vercel.app",
+  "icon_url": "https://your-domain.vercel.app/favicon.ico",
+  "splash_image_url": "https://your-domain.vercel.app/splash.png",
+  "permissions": ["wallet"]
+}

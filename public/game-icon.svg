@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" fill="none">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="#1a1a2e" stroke="#836EF9" stroke-width="4"/>
+  
+  <!-- Monad logo scaled up and centered -->
+  <g transform="translate(100, 70) scale(2.2)">
+    <path fill="#836EF9" d="M0 -9c-2.599 0-9 6.4-9 9s6.401 9 9 9s9-6.401 9-9s-6.401-9-9-9m-1.402 14.146c-1.097-.298-4.043-5.453-3.744-6.549s5.453-4.042 6.549-3.743c1.095.298 4.042 5.453 3.743 6.549c-.298 1.095-5.453 4.042-6.549 3.743"/>
+  </g>
+  
+  <!-- Platform elements for jump theme -->
+  <rect x="35" y="125" width="35" height="5" rx="2" fill="#836EF9"/>
+  <rect x="130" y="120" width="35" height="5" rx="2" fill="#836EF9"/>
+  <rect x="80" y="135" width="35" height="5" rx="2" fill="#836EF9"/>
+  
+  <!-- Motion lines -->
+  <path d="M25 110 Q35 105 45 110" stroke="#836EF9" stroke-width="2" fill="none"/>
+  <path d="M155 115 Q165 110 175 115" stroke="#836EF9" stroke-width="2" fill="none"/>
+  
+  <!-- Text at bottom with more spacing -->
+  <text x="100" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#836EF9">MONAD JUMP</text>
+</svg>

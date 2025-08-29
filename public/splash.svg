@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="314" viewBox="0 0 600 314" fill="none">
+  <!-- Gradient background -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#2d144f"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="314" fill="url(#bg)"/>
+  
+  <!-- Monad logo centered -->
+  <g transform="translate(300, 100) scale(4)">
+    <path fill="#836EF9" d="M0 -9c-2.599 0-9 6.4-9 9s6.401 9 9 9s9-6.401 9-9s-6.401-9-9-9m-1.402 14.146c-1.097-.298-4.043-5.453-3.744-6.549s5.453-4.042 6.549-3.743c1.095.298 4.042 5.453 3.743 6.549c-.298 1.095-5.453 4.042-6.549 3.743"/>
+  </g>
+  
+  <!-- Platform elements -->
+  <rect x="100" y="200" width="80" height="10" rx="5" fill="#836EF9"/>
+  <rect x="400" y="190" width="80" height="10" rx="5" fill="#836EF9"/>
+  <rect x="250" y="220" width="80" height="10" rx="5" fill="#836EF9"/>
+  
+  <!-- Title -->
+  <text x="300" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#836EF9">MONAD JUMP</text>
+  <text x="300" y="295" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#aaaaaa">Jump your monad to new heights! Gmonad 💜</text>
+</svg>

@@ -6,6 +6,11 @@ import ScoreDebugger from './components/ScoreDebugger';
 
 export default function Home() {
   const [playerAddress, setPlayerAddress] = useState<string>("");
+  
+  const handleAddressChange = (address: string) => {
+    console.log('Home: Received address:', address);
+    setPlayerAddress(address);
+  };
 
   return (
     <div className="min-h-screen relative">
@@ -14,7 +19,7 @@ export default function Home() {
       
       {/* Auth component positioned at top right above canvas */}
       <div className="absolute top-4 right-4 z-20">
-        <AuthComponent onAddressChange={setPlayerAddress} />
+        <AuthComponent onAddressChange={handleAddressChange} />
       </div>
       
       {/* Debug component positioned at bottom right */}

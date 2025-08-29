@@ -38,8 +38,11 @@ function PrivyAuth({ onAddressChange }: { onAddressChange: (address: string) => 
         // The first embedded wallet created using Monad Games ID, is the wallet address
         if (crossAppAccount && crossAppAccount.embeddedWallets.length > 0) {
           const address = crossAppAccount.embeddedWallets[0].address;
+          console.log('AuthComponent: Setting address:', address);
           setAccountAddress(address);
           onAddressChange(address);
+        } else {
+          console.log('AuthComponent: No embedded wallets found');
         }
       } else {
         setMessage("You need to link your Monad Games ID account to continue.");

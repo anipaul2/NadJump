@@ -5,11 +5,11 @@ import AuthComponent from './components/AuthComponent';
 import ScoreDebugger from './components/ScoreDebugger';
 
 export default function Home() {
-  const [playerAddress, setPlayerAddress] = useState<string>("");
+  const [playerAddress, setPlayerAddress] = useState<string>("0x09613751829A00a4077f7F390BA14bfBC4349B6a"); // Temporary hardcode for testing
   
   const handleAddressChange = (address: string) => {
     console.log('Home: Received address:', address);
-    setPlayerAddress(address);
+    setPlayerAddress(address || "0x09613751829A00a4077f7F390BA14bfBC4349B6a"); // Fallback to your address
   };
 
   return (

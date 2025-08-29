@@ -883,14 +883,17 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     console.log('End game - Current score:', gameStateRef.current.currentScore, 'Max height:', gameStateRef.current.maxHeight);
     console.log('PlayerAddress:', playerAddress);
     console.log('Score:', score);
-    gameStateRef.current.finalScore = gameStateRef.current.currentScore;
+    
+    // Use the game's actual score, not the React state
+    const finalScore = gameStateRef.current.currentScore;
+    gameStateRef.current.finalScore = finalScore;
     gameStateRef.current.currentState = 'gameover';
     
     // Submit score to secure API endpoint
-    if (score > 0 && playerAddress) {
+    if (finalScore > 0 && playerAddress) {
       console.log('Attempting to submit score...');
       try {
-        const result = await submitPlayerScore(playerAddress, score, 1);
+        const result = await submitPlayerScore(playerAddress, finalScore, 1);
         console.log('Score submission result:', result);
         
         if (result.success) {
@@ -912,9 +915,9 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
         toast.error('Failed to submit score');
       }
       
-      sendNotification(`New score: ${score}!`);
+      sendNotification(`New score: ${finalScore}!`);
     } else {
-      console.log('Score submission skipped - Score:', score, 'PlayerAddress:', playerAddress);
+      console.log('Score submission skipped - FinalScore:', finalScore, 'PlayerAddress:', playerAddress);
       if (!playerAddress) {
         toast.error('Please sign in to submit scores');
       }

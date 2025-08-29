@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from 'react';
-// Removed TransactionQueue - now using secure server-side API
+import { submitPlayerScore } from '@/app/lib/score-api';
 import { useFarcaster } from './FarcasterProvider';
 import toast from 'react-hot-toast';
 
@@ -887,23 +887,18 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     // Submit score to secure API endpoint
     if (score > 0 && playerAddress) {
       try {
-        const response = await fetch('/api/submit-score', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            playerAddress,
-            score,
-            transactions: 1
-          }),
-        });
-
-        const result = await response.json();
+        const result = await submitPlayerScore(playerAddress, score, 1);
         
-        if (response.ok && result.success) {
+        if (result.success) {
           toast.success('Score submitted successfully!');
           console.log('Score submitted:', result);
+          
+          if (result.transactionHash) {
+            toast.success(`TX: ${result.transactionHash.slice(0, 10)}...`, {
+              duration: 5000,
+              icon: '📝',
+            });
+          }
         } else {
           throw new Error(result.error || 'Failed to submit score');
         }

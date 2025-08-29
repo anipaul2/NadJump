@@ -17,8 +17,8 @@ export const GAME_CONFIG = {
   
   // Game metadata
   METADATA: {
-    name: 'Monad Jump',
-    url: 'https://ap-ignore-jean-turbo.trycloudflare.com/',
-    image: 'https://ap-ignore-jean-turbo.trycloudflare.com/game-icon.svg'
+    name: 'NadJump',
+    url: 'https://nad-jump.vercel.app/',
+    image: 'https://nad-jump.vercel.app/monad-logo.svg'
   }
 } as const;

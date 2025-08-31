@@ -30,24 +30,31 @@ export default function FarcasterInit({ children }: { children: React.ReactNode 
     initSDK();
   }, []);
 
-  // Call ready when SDK is loaded
+  // Call ready when SDK is loaded and we're in Farcaster
   useEffect(() => {
     if (!isSDKLoaded) return;
     
-    const callReady = async () => {
-      try {
-        console.log('🚀 FarcasterInit: Calling sdk.actions.ready()...');
-        await sdk.actions.ready();
-        console.log('✅ FarcasterInit: sdk.actions.ready() called successfully');
-        setReadyCalled(true);
-      } catch {
-        console.error('❌ FarcasterInit: Error calling sdk.actions.ready()');
-        // Try again after a delay
-        setTimeout(callReady, 1000);
-      }
-    };
-
-    callReady();
+    // Check if we're actually in Farcaster before calling ready
+    const isInFarcaster = (window as unknown as { isInFarcaster?: boolean }).isInFarcaster;
+    
+    if (isInFarcaster) {
+      const callReady = async () => {
+        try {
+          console.log('🚀 FarcasterInit: Calling sdk.actions.ready()...');
+          await sdk.actions.ready();
+          console.log('✅ FarcasterInit: sdk.actions.ready() called successfully');
+          setReadyCalled(true);
+        } catch {
+          console.error('❌ FarcasterInit: Error calling sdk.actions.ready()');
+          // Try again after a delay
+          setTimeout(callReady, 1000);
+        }
+      };
+      callReady();
+    } else {
+      // Not in Farcaster, just mark as ready
+      setReadyCalled(true);
+    }
   }, [isSDKLoaded]);
 
   // Show loading while SDK initializes

@@ -77,7 +77,7 @@ function PrivyAuth({ onAddressChange }: { onAddressChange: (address: string) => 
 
   if (!authenticated) {
     // Check if running inside Farcaster
-    const isInFarcaster = typeof window !== 'undefined' && (window as any).isInFarcaster;
+    const isInFarcaster = typeof window !== 'undefined' && (window as unknown as { isInFarcaster?: boolean }).isInFarcaster;
     
     if (isInFarcaster) {
       return (

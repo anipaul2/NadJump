@@ -76,31 +76,6 @@ function PrivyAuth({ onAddressChange }: { onAddressChange: (address: string) => 
   }
 
   if (!authenticated) {
-    // Check if running inside Farcaster
-    const isInFarcaster = typeof window !== 'undefined' && (window as unknown as { isInFarcaster?: boolean }).isInFarcaster;
-    
-    if (isInFarcaster) {
-      return (
-        <div className="text-center bg-black/70 px-3 py-2 rounded text-xs max-w-xs">
-          <div className="text-yellow-400 mb-2">⚠️ Login Required</div>
-          <div className="text-white text-xs leading-tight">
-            Open this game in your browser to login with Monad Games ID
-          </div>
-          <button 
-            onClick={() => {
-              // Try to open in external browser
-              if (typeof window !== 'undefined') {
-                window.open('https://nad-jump.vercel.app/', '_blank');
-              }
-            }}
-            className="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 mt-2"
-          >
-            Open in Browser
-          </button>
-        </div>
-      );
-    }
-    
     return (
       <button 
         onClick={login}

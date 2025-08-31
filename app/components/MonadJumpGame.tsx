@@ -191,7 +191,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
   };
 
   const generatePlatform = (platforms: Platform[], index: number) => {
-    const y = GAME_HEIGHT - 350 - (index * 60); // Start from higher position to match new player start
+    const y = GAME_HEIGHT - 350 - (index * 45); // Reduced to 45px vertical spacing for better jumpability
     return generatePlatformForRow(platforms, index, y);
   };
 
@@ -210,8 +210,8 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       x = Math.random() * (GAME_WIDTH - 70);
     }
     
-    // Guarantee platforms for first 5 levels, then 60% chance
-    const shouldGenerate = force || index <= 5 || Math.random() < 0.6;
+    // Guarantee platforms for first 8 levels, then 65% chance
+    const shouldGenerate = force || index <= 8 || Math.random() < 0.65;
     
     if (shouldGenerate) {
       const type = Math.random() < 0.1 ? 'spring' : 
@@ -377,24 +377,26 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     ctx.textAlign = 'center';
     ctx.fillText('Leaderboard', leaderboardBtn.x + leaderboardBtn.width/2, leaderboardBtn.y + 22);
 
-    // Play button - only show if user is logged in
-    const playBtn = { x: GAME_WIDTH/2 - 100, y: 320, width: 200, height: 50 };
+    // Guidance messages above play button
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#4B5563';
+    ctx.font = 'bold 16px Arial';
+    ctx.fillText('🏆 Login to compete on leaderboard • 📱 Play instantly on mobile', GAME_WIDTH / 2, 250);
+    
+    ctx.fillStyle = '#6B7280';
+    ctx.font = '14px Arial';
+    ctx.fillText('💡 Note: Login won\'t work in Farcaster mobile app - just play and enjoy!', GAME_WIDTH / 2, 270);
+
+    // Play button - always show, works for everyone
+    const playBtn = { x: GAME_WIDTH/2 - 75, y: 290, width: 150, height: 40 };
     const isPlayHover = buttonHover === 1;
     
-    if (playerAddressRef.current) {
-      // User is logged in - show Play button
-      drawGradientRect(ctx, playBtn.x, playBtn.y, playBtn.width, playBtn.height,
-                       isPlayHover ? '#836EF9' : '#6B46C1',
-                       isPlayHover ? '#6B46C1' : '#553C9A', 12);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 24px Arial';
-      ctx.fillText('Play', playBtn.x + playBtn.width/2, playBtn.y + 32);
-    } else {
-      // User not logged in - show login message
-      ctx.fillStyle = '#666666';
-      ctx.font = 'bold 18px Arial';
-      ctx.fillText('Please login to play', playBtn.x + playBtn.width/2, playBtn.y + 28);
-    }
+    drawGradientRect(ctx, playBtn.x, playBtn.y, playBtn.width, playBtn.height,
+                     isPlayHover ? '#836EF9' : '#6B46C1',
+                     isPlayHover ? '#6B46C1' : '#553C9A', 10);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 20px Arial';
+    ctx.fillText('🎮 PLAY', playBtn.x + playBtn.width/2, playBtn.y + 28);
   };
 
   // Render game
@@ -589,13 +591,9 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       if (x >= 20 && x <= 120 && y >= 20 && y <= 55) {
         // Leaderboard button (top left position)
         window.open('https://monad-games-id-site.vercel.app/leaderboard?page=1&gameId=236', '_blank');
-      } else if (x >= GAME_WIDTH/2 - 100 && x <= GAME_WIDTH/2 + 100 && y >= 320 && y <= 370) {
-        // Play button - only start if user is logged in
-        if (playerAddressRef.current) {
-          startGame();
-        } else {
-          toast.error('Please login to play!');
-        }
+      } else if (x >= GAME_WIDTH/2 - 75 && x <= GAME_WIDTH/2 + 75 && y >= 290 && y <= 330) {
+        // Play button - always allow playing
+        startGame();
       }
     } else if (gameStateRef.current.currentState === 'gameover') {
       // Play Again button
@@ -727,12 +725,12 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       
       // Generate platforms going upward with better spacing and positioning
       for (let i = 0; i < 10; i++) {
-        const newY = highestPlatformY - (60 * (i + 1)); // Closer vertical spacing (60px instead of 85px)
+        const newY = highestPlatformY - (45 * (i + 1)); // Reduced to 45px spacing for consistent jumpability
         
-        // Try to generate a platform for this row with 60% chance
-        if (Math.random() < 0.6) {
+        // Try to generate a platform for this row with 65% chance
+        if (Math.random() < 0.65) {
           // Find existing platforms at similar height to ensure reachable positioning
-          const nearbyPlatforms = platforms.filter(p => Math.abs(p.y - (newY + 60)) < 100);
+          const nearbyPlatforms = platforms.filter(p => Math.abs(p.y - (newY + 45)) < 80);
           let x;
           
           if (nearbyPlatforms.length > 0) {

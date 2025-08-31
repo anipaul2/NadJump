@@ -364,7 +364,6 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     ctx.fillStyle = '#333333';
     ctx.textAlign = 'center';
     ctx.fillText(`Best Score: ${Math.max(score, gameStateRef.current.finalScore)}`, GAME_WIDTH / 2, 160);
-    ctx.fillText(`Points: ${points}`, GAME_WIDTH / 2, 180);
 
     // Leaderboard button (top left to avoid overlaps)
     const leaderboardBtn = { x: 20, y: 20, width: 100, height: 35 };
@@ -380,12 +379,12 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     // Guidance messages above play button
     ctx.textAlign = 'center';
     ctx.fillStyle = '#4B5563';
-    ctx.font = 'bold 16px Arial';
-    ctx.fillText('🏆 Login to compete on leaderboard • 📱 Play instantly on mobile', GAME_WIDTH / 2, 250);
+    ctx.font = 'bold 14px Arial';
+    ctx.fillText('🏆 Login for leaderboard • 📱 Instant play', GAME_WIDTH / 2, 245);
     
     ctx.fillStyle = '#6B7280';
-    ctx.font = '14px Arial';
-    ctx.fillText('💡 Note: Login won\'t work in Farcaster mobile app - just play and enjoy!', GAME_WIDTH / 2, 270);
+    ctx.font = '12px Arial';
+    ctx.fillText('💡 Farcaster mobile: Just play & enjoy!', GAME_WIDTH / 2, 260);
 
     // Play button - always show, works for everyone
     const playBtn = { x: GAME_WIDTH/2 - 75, y: 290, width: 150, height: 40 };

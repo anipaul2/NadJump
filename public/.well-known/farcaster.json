@@ -4,6 +4,27 @@
     "payload": "eyJkb21haW4iOiJuYWQtanVtcC52ZXJjZWwuYXBwIn0", 
     "signature": "MHg2MzVkM2U2NmFkNTRhODUwOGY1OTg0MzY3ZDVhYzA5OTYwZDk2NDNiNDgxNmE5ODAzOTk2YmU4YTJjOTY2MzQ0MDBhZDczODhmNGFmNjk1MzYwNzJkNjY3Nzk0NDU3YWE2N2QxMTY4MDYwMzhmNjdmMDBjNDAyMzlhMmQ5NzhkNTFj"
   },
+  "miniapp": {
+    "version": "1",
+    "name": "NadJump",
+    "iconUrl": "https://nad-jump.vercel.app/monad-logo.svg",
+    "homeUrl": "https://nad-jump.vercel.app",
+    "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+    "screenshotUrls": [],
+    "tags": [
+      "monad",
+      "game",
+      "jump",
+      "leaderboard",
+      "mission7"
+    ],
+    "primaryCategory": "games",
+    "buttonTitle": "Climb the Leaderboard",
+    "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+    "splashBackgroundColor": "#836EF9",
+    "description": "A fun jumping game built for Monad Games ID Mission 7 - compete on the leaderboard!",
+    "webhookUrl": "https://nad-jump.vercel.app/api/webhook"
+  },
   "frame": {
     "version": "1",
     "name": "NadJump",

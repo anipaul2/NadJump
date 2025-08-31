@@ -2,9 +2,10 @@
   "miniapp": {
     "version": "1",
     "name": "NadJump",
-    "iconUrl": "https://your-app-url.vercel.app/monad-logo.svg",
-    "homeUrl": "https://your-app-url.vercel.app",
-    "imageUrl": "https://your-app-url.vercel.app/monad-logo.svg",
-    "description": "A fun jumping game built for Monad Games ID - compete on the leaderboard!"
+    "iconUrl": "https://nad-jump.vercel.app/monad-logo.svg",
+    "homeUrl": "https://nad-jump.vercel.app",
+    "splash_image_url": "https://nad-jump.vercel.app/splash.png",
+    "imageUrl": "https://nad-jump.vercel.app/splash.png",
+    "description": "A fun jumping game built for Monad Games ID Mission 7- compete on the leaderboard!"
   }
 }

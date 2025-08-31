@@ -55,6 +55,7 @@ export function validateOrigin(request: NextRequest): boolean {
     'http://localhost:3000',
     'https://localhost:3000',
     'https://nad-jump.vercel.app',
+    'https://tomorrow-terrace-lean-loads.trycloudflare.com',
     process.env.NEXT_PUBLIC_APP_URL
   ].filter(Boolean);
 
@@ -84,11 +85,24 @@ export function validateCSRFToken(request: NextRequest, expectedToken: string): 
   return token === expectedToken;
 }
 
-export function createAuthenticatedResponse(data: Record<string, unknown>, status = 200) {
+export function createAuthenticatedResponse(data: Record<string, unknown>, status = 200, origin?: string) {
+  // Use the requesting origin if it's allowed, otherwise fallback to default
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'https://localhost:3000', 
+    'https://nad-jump.vercel.app',
+    'https://tomorrow-terrace-lean-loads.trycloudflare.com',
+    process.env.NEXT_PUBLIC_APP_URL
+  ].filter(Boolean);
+  
+  const corsOrigin = origin && allowedOrigins.includes(origin) 
+    ? origin 
+    : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  
   return Response.json(data, {
     status,
     headers: {
-      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+      'Access-Control-Allow-Origin': corsOrigin,
       'Access-Control-Allow-Methods': 'POST',
       'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
       'Access-Control-Allow-Credentials': 'true'

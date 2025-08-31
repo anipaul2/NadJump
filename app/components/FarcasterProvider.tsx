@@ -78,8 +78,8 @@ export default function FarcasterProvider({ children }: { children: React.ReactN
       console.log('Sharing game with score:', score);
       
       const text = score 
-        ? `🎮 Just scored ${score} points in NadJump! Can you beat my score? 🚀 #MonadGames` 
-        : '🎮 Check out NadJump - an awesome jumping game on Monad! 🚀 #MonadGames';
+        ? `🎮 Just scored ${score} points in NadJump! Can you beat my score? 🚀 https://nad-jump.vercel.app/` 
+        : '🎮 Check out NadJump - an awesome jumping game on Monad! 🚀 https://nad-jump.vercel.app/';
       
       // Use the new composeCast method
       await sdk.actions.composeCast({

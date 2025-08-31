@@ -1,22 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateSessionToken, validateOrigin } from '@/app/lib/auth';
+import { generateSessionToken, validateOrigin, createAuthenticatedResponse } from '@/app/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
     // Validate origin
     if (!validateOrigin(request)) {
-      return NextResponse.json(
+      return createAuthenticatedResponse(
         { error: 'Forbidden: Invalid origin' },
-        { status: 403 }
+        403,
+        request.headers.get('origin')
       );
     }
 
     const { playerAddress, signedMessage, message } = await request.json();
 
     if (!playerAddress || !signedMessage || !message) {
-      return NextResponse.json(
+      return createAuthenticatedResponse(
         { error: 'Missing required fields: playerAddress, signedMessage, message' },
-        { status: 400 }
+        400,
+        request.headers.get('origin')
       );
     }
 
@@ -24,9 +26,10 @@ export async function POST(request: NextRequest) {
     // This should be done by checking the signature against the player's wallet
     // For now, we'll implement a basic check - in production, you'd verify the signature
     if (!message.includes(playerAddress)) {
-      return NextResponse.json(
+      return createAuthenticatedResponse(
         { error: 'Invalid message format' },
-        { status: 400 }
+        400,
+        request.headers.get('origin')
       );
     }
 
@@ -37,17 +40,18 @@ export async function POST(request: NextRequest) {
     const timestamp = Math.floor(Date.now() / 30000) * 30000; // Round to 30-second intervals
     const sessionToken = generateSessionToken(playerAddress, timestamp);
 
-    return NextResponse.json({
+    return createAuthenticatedResponse({
       success: true,
       sessionToken,
       expiresAt: timestamp + 300000, // 5 minutes from token timestamp
-    });
+    }, 200, request.headers.get('origin'));
 
   } catch (error) {
     console.error('Error generating session token:', error);
-    return NextResponse.json(
+    return createAuthenticatedResponse(
       { error: 'Failed to generate session token' },
-      { status: 500 }
+      500,
+      request.headers.get('origin')
     );
   }
 }

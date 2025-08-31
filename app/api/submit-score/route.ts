@@ -3,33 +3,46 @@ import { createWalletClient, http } from 'viem';
 import { monadTestnet } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import { CONTRACT_ADDRESS, CONTRACT_ABI, isValidAddress } from '@/app/lib/blockchain';
+import { validateOrigin, createAuthenticatedResponse } from '@/app/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate origin
+    if (!validateOrigin(request)) {
+      return createAuthenticatedResponse(
+        { error: 'Forbidden: Invalid origin' },
+        403,
+        request.headers.get('origin')
+      );
+    }
+
     // Parse request body
     const { playerAddress, score, transactions = 1 } = await request.json();
 
     // Validate input
     if (!playerAddress || score === undefined) {
-      return NextResponse.json(
+      return createAuthenticatedResponse(
         { error: 'Missing required fields: playerAddress, score' },
-        { status: 400 }
+        400,
+        request.headers.get('origin')
       );
     }
 
     // Validate player address format
     if (!isValidAddress(playerAddress)) {
-      return NextResponse.json(
+      return createAuthenticatedResponse(
         { error: 'Invalid player address format' },
-        { status: 400 }
+        400,
+        request.headers.get('origin')
       );
     }
 
     // Validate that score and transactions are positive numbers
     if (score < 0 || transactions < 0) {
-      return NextResponse.json(
+      return createAuthenticatedResponse(
         { error: 'Score and transaction amounts must be non-negative' },
-        { status: 400 }
+        400,
+        request.headers.get('origin')
       );
     }
 
@@ -38,9 +51,10 @@ export async function POST(request: NextRequest) {
     const MAX_TRANSACTIONS_PER_REQUEST = 10;
     
     if (score > MAX_SCORE_PER_REQUEST || transactions > MAX_TRANSACTIONS_PER_REQUEST) {
-      return NextResponse.json(
+      return createAuthenticatedResponse(
         { error: `Amounts too large. Max score: ${MAX_SCORE_PER_REQUEST}, Max transactions: ${MAX_TRANSACTIONS_PER_REQUEST}` },
-        { status: 400 }
+        400,
+        request.headers.get('origin')
       );
     }
 
@@ -48,9 +62,10 @@ export async function POST(request: NextRequest) {
     const privateKey = process.env.WALLET_PRIVATE_KEY;
     if (!privateKey) {
       console.error('WALLET_PRIVATE_KEY environment variable not set');
-      return NextResponse.json(
+      return createAuthenticatedResponse(
         { error: 'Server configuration error' },
-        { status: 500 }
+        500,
+        request.headers.get('origin')
       );
     }
 
@@ -80,14 +95,14 @@ export async function POST(request: NextRequest) {
 
     console.log(`Score submitted successfully. Transaction hash: ${hash}`);
 
-    return NextResponse.json({
+    return createAuthenticatedResponse({
       success: true,
       transactionHash: hash,
       message: 'Score submitted successfully',
       playerAddress,
       scoreSubmitted: score,
       transactionsSubmitted: transactions
-    });
+    }, 200, request.headers.get('origin'));
 
   } catch (error) {
     console.error('Error submitting score:', error);
@@ -95,28 +110,32 @@ export async function POST(request: NextRequest) {
     // Handle specific viem errors
     if (error instanceof Error) {
       if (error.message.includes('insufficient funds')) {
-        return NextResponse.json(
+        return createAuthenticatedResponse(
           { error: 'Insufficient funds to complete transaction' },
-          { status: 400 }
+          400,
+          request.headers.get('origin')
         );
       }
       if (error.message.includes('execution reverted')) {
-        return NextResponse.json(
+        return createAuthenticatedResponse(
           { error: 'Contract execution failed - check if wallet has GAME_ROLE permission' },
-          { status: 400 }
+          400,
+          request.headers.get('origin')
         );
       }
       if (error.message.includes('AccessControlUnauthorizedAccount')) {
-        return NextResponse.json(
+        return createAuthenticatedResponse(
           { error: 'Unauthorized: Wallet does not have GAME_ROLE permission' },
-          { status: 403 }
+          403,
+          request.headers.get('origin')
         );
       }
     }
 
-    return NextResponse.json(
+    return createAuthenticatedResponse(
       { error: 'Failed to submit score' },
-      { status: 500 }
+      500,
+      request.headers.get('origin')
     );
   }
 }

@@ -16,13 +16,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NadJump - Mission 7 Game",
-  description: "🎮 Jump through platforms and compete on the Monad Games leaderboard! Can you reach the top?",
+  title: "NadJump",
+  description: "Jump through platforms and compete on the Monad Games leaderboard! Can you reach the top?",
   openGraph: {
-    title: "NadJump - Mission 7 Game",
-    description: "🎮 Jump through platforms and compete on the Monad Games leaderboard! 🚀 #MonadGames",
+    title: "NadJump",
+    description: "Jump through platforms and compete on the Monad Games leaderboard! Can you reach the top?",
     images: ["/monad-logo.svg"],
-    url: "https://your-app-url.vercel.app",
+    url: "https://nad-jump.vercel.app",
   },
   other: {
     // Farcaster Frame metadata
@@ -66,7 +66,7 @@ export default function RootLayout({
           </FarcasterProvider>
         </PrivyProvider>
         <Toaster 
-          position="top-right"
+          position="top-center"
           toastOptions={{
             duration: 4000,
             style: {

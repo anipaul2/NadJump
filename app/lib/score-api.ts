@@ -183,7 +183,7 @@ export class ScoreSubmissionManager {
       return { success: true, message: 'No pending data to submit' };
     }
 
-    return submitPlayerScore(this.playerAddress, score, transactions);
+    return submitPlayerScore(this.playerAddress, Math.floor(score), transactions);
   }
 
   // Schedule a delayed submission (batches multiple updates)
@@ -400,7 +400,7 @@ export class TransactionQueue {
 
         const result = await submitPlayerScore(
           transaction.playerAddress,
-          transaction.scoreAmount,
+          Math.floor(transaction.scoreAmount),
           transaction.transactionAmount
         );
 

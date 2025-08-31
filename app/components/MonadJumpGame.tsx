@@ -82,7 +82,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     
     player: {
       x: GAME_WIDTH / 2 - 15,
-      y: GAME_HEIGHT - 200, // Higher starting position, above water
+      y: GAME_HEIGHT - 300, // Much higher starting position, well above water
       vx: 0,
       vy: 0,
       width: 30, // Smaller player
@@ -109,6 +109,10 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     lastSubmittedScore: 0,
     finalScore: 0,
     currentScore: 0,
+    
+    // Rising water level
+    waterLevel: GAME_HEIGHT - 100, // Start water level at original position
+    highestPlayerY: GAME_HEIGHT - 300, // Track player's highest position
   });
 
   // Removed transaction queue initialization - now using secure server-side API
@@ -168,10 +172,10 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
   const generatePlatforms = () => {
     const platforms: Platform[] = [];
     
-    // Starting platform (above water level)
+    // Starting platform (above water level, positioned for player to land on)
     platforms.push({
       x: GAME_WIDTH/2 - 75,
-      y: GAME_HEIGHT - 130, // Above water level (water starts at -100)
+      y: GAME_HEIGHT - 280, // Position just below where player starts (player at GAME_HEIGHT - 300)
       width: 150, // Smaller starting platform
       height: 15,
       type: 'normal',
@@ -187,7 +191,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
   };
 
   const generatePlatform = (platforms: Platform[], index: number) => {
-    const y = GAME_HEIGHT - 200 - (index * 60); // Closer spacing (60px instead of 85px)
+    const y = GAME_HEIGHT - 350 - (index * 60); // Start from higher position to match new player start
     return generatePlatformForRow(platforms, index, y);
   };
 
@@ -198,7 +202,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       // Position within jumping range of existing platforms
       const recentPlatforms = platforms.slice(-5); // Look at last 5 platforms
       const referencePlatform = recentPlatforms[Math.floor(Math.random() * recentPlatforms.length)];
-      const maxJumpDistance = 150; // Horizontal jump range
+      const maxJumpDistance = 120; // Reduced horizontal jump range for better gameplay
       const minX = Math.max(0, referencePlatform.x - maxJumpDistance);
       const maxX = Math.min(GAME_WIDTH - 70, referencePlatform.x + maxJumpDistance);
       x = minX + Math.random() * (maxX - minX);
@@ -373,15 +377,24 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     ctx.textAlign = 'center';
     ctx.fillText('Leaderboard', leaderboardBtn.x + leaderboardBtn.width/2, leaderboardBtn.y + 22);
 
-    // Play button
+    // Play button - only show if user is logged in
     const playBtn = { x: GAME_WIDTH/2 - 100, y: 320, width: 200, height: 50 };
     const isPlayHover = buttonHover === 1;
-    drawGradientRect(ctx, playBtn.x, playBtn.y, playBtn.width, playBtn.height,
-                     isPlayHover ? '#836EF9' : '#6B46C1',
-                     isPlayHover ? '#6B46C1' : '#553C9A', 12);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = 'bold 24px Arial';
-    ctx.fillText('Play', playBtn.x + playBtn.width/2, playBtn.y + 32);
+    
+    if (playerAddressRef.current) {
+      // User is logged in - show Play button
+      drawGradientRect(ctx, playBtn.x, playBtn.y, playBtn.width, playBtn.height,
+                       isPlayHover ? '#836EF9' : '#6B46C1',
+                       isPlayHover ? '#6B46C1' : '#553C9A', 12);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 24px Arial';
+      ctx.fillText('Play', playBtn.x + playBtn.width/2, playBtn.y + 32);
+    } else {
+      // User not logged in - show login message
+      ctx.fillStyle = '#666666';
+      ctx.font = 'bold 18px Arial';
+      ctx.fillText('Please login to play', playBtn.x + playBtn.width/2, playBtn.y + 28);
+    }
   };
 
   // Render game
@@ -472,24 +485,23 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     // Draw player
     drawPlayer(ctx, player.x, player.y, player.squash, gameStateRef.current.animTime);
     
-    ctx.restore(); // End camera transformation
-    
-    // Water at bottom with waves - render AFTER camera transformation (stays fixed on screen)
-    const waterGradient = ctx.createLinearGradient(0, GAME_HEIGHT - 100, 0, GAME_HEIGHT);
+    // Draw rising water level (INSIDE camera transformation so it moves with world)
+    const currentWaterLevel = gameStateRef.current.waterLevel;
+    const waterGradient = ctx.createLinearGradient(0, currentWaterLevel, 0, currentWaterLevel + 200);
     waterGradient.addColorStop(0, '#1E90FF'); // Bright blue
     waterGradient.addColorStop(0.5, '#0066CC'); // Medium blue
     waterGradient.addColorStop(1, '#003399'); // Dark blue
     ctx.fillStyle = waterGradient;
     
-    // Draw wave pattern
+    // Draw wave pattern at rising water level
     ctx.beginPath();
-    ctx.moveTo(0, GAME_HEIGHT - 100);
+    ctx.moveTo(0, currentWaterLevel);
     for (let x = 0; x <= GAME_WIDTH; x += 20) {
       const waveHeight = Math.sin((x + gameStateRef.current.animTime * 2) * 0.02) * 8;
-      ctx.lineTo(x, GAME_HEIGHT - 100 + waveHeight);
+      ctx.lineTo(x, currentWaterLevel + waveHeight);
     }
-    ctx.lineTo(GAME_WIDTH, GAME_HEIGHT);
-    ctx.lineTo(0, GAME_HEIGHT);
+    ctx.lineTo(GAME_WIDTH, currentWaterLevel + 200); // Extend water down
+    ctx.lineTo(0, currentWaterLevel + 200);
     ctx.closePath();
     ctx.fill();
     
@@ -497,12 +509,14 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(0, GAME_HEIGHT - 100);
+    ctx.moveTo(0, currentWaterLevel);
     for (let x = 0; x <= GAME_WIDTH; x += 20) {
       const waveHeight = Math.sin((x + gameStateRef.current.animTime * 2) * 0.02) * 8;
-      ctx.lineTo(x, GAME_HEIGHT - 100 + waveHeight);
+      ctx.lineTo(x, currentWaterLevel + waveHeight);
     }
     ctx.stroke();
+    
+    ctx.restore(); // End camera transformation
     
     // UI overlay - top left score with smaller, non-overlapping sizing
     ctx.save();
@@ -576,8 +590,12 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
         // Leaderboard button (top left position)
         window.open('https://monad-games-id-site.vercel.app/leaderboard', '_blank');
       } else if (x >= GAME_WIDTH/2 - 100 && x <= GAME_WIDTH/2 + 100 && y >= 320 && y <= 370) {
-        // Play button
-        startGame();
+        // Play button - only start if user is logged in
+        if (playerAddressRef.current) {
+          startGame();
+        } else {
+          toast.error('Please login to play!');
+        }
       }
     } else if (gameStateRef.current.currentState === 'gameover') {
       // Play Again button
@@ -634,7 +652,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     
     gameState.player = {
       x: GAME_WIDTH / 2 - 15,
-      y: GAME_HEIGHT - 200, // Higher starting position, above water
+      y: GAME_HEIGHT - 300, // Much higher starting position, well above water (which is at GAME_HEIGHT - 100)
       vx: 0,
       vy: 0,
       width: 30, // Smaller player
@@ -646,6 +664,11 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     
     gameState.currentScore = 0;
     setScore(0);
+    
+    // Reset water level to starting position
+    gameState.waterLevel = GAME_HEIGHT - 100;
+    gameState.highestPlayerY = GAME_HEIGHT - 300;
+    
     // Don't reset points - they accumulate across games
   };
 
@@ -715,7 +738,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
           if (nearbyPlatforms.length > 0) {
             // Position within jumping distance of an existing platform
             const nearestPlatform = nearbyPlatforms[Math.floor(Math.random() * nearbyPlatforms.length)];
-            const maxJumpDistance = 180; // Maximum horizontal jump distance
+            const maxJumpDistance = 120; // Reduced horizontal jump distance for easier gameplay
             const minX = Math.max(0, nearestPlatform.x - maxJumpDistance);
             const maxX = Math.min(GAME_WIDTH - 70, nearestPlatform.x + maxJumpDistance);
             x = minX + Math.random() * (maxX - minX);
@@ -751,7 +774,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       if (platformsGenerated < 2) {
         for (let i = 0; i < 2 - platformsGenerated; i++) {
           const forceY = highestPlatformY - (60 * (i + 1));
-          const x = GAME_WIDTH / 2 - 35 + (Math.random() - 0.5) * 200; // Center-ish with some variation
+          const x = GAME_WIDTH / 2 - 35 + (Math.random() - 0.5) * 120; // Center-ish with less variation for easier jumps
           
           platforms.push({
             x: Math.max(0, Math.min(GAME_WIDTH - 70, x)),
@@ -826,11 +849,20 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     // Restore squash animation (slower)
     player.squash += (1.0 - player.squash) * 0.15;
     
-    // Simple camera - follow player up
+    // ORIGINAL camera logic - follow player up
     if (player.y < GAME_HEIGHT/2) {
       camera.targetY = -(player.y - GAME_HEIGHT/2);
     }
-    camera.y = camera.targetY; // No smoothing, direct follow
+    camera.y = camera.targetY;
+    
+    // Update water level based on player's highest position achieved
+    if (player.y < gameStateRef.current.highestPlayerY) {
+      gameStateRef.current.highestPlayerY = player.y;
+      // Water level follows player progress - rises as player goes higher
+      // Keep water about 400px below the highest point reached
+      gameStateRef.current.waterLevel = player.y + 400;
+      console.log('New highest point reached! Player Y:', player.y.toFixed(1), 'Water Level:', gameStateRef.current.waterLevel.toFixed(1));
+    }
     
     // Update height tracking and score calculation
     const currentHeight = Math.max(0, (GAME_HEIGHT - 200) - player.y);
@@ -865,8 +897,9 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       }
     }
     
-    // Game over check - fell below visible screen
-    if (player.y > camera.y + GAME_HEIGHT + 100) {
+    // Game over check - player touches rising water level
+    if (player.y + player.height >= gameStateRef.current.waterLevel) {
+      console.log('GAME OVER! Player hit rising water - Player Bottom:', (player.y + player.height).toFixed(1), 'Water Level:', gameStateRef.current.waterLevel.toFixed(1));
       endGame();
     }
   };
@@ -888,6 +921,12 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
   };
 
   const endGame = async () => {
+    // Prevent multiple calls to endGame
+    if (gameStateRef.current.currentState === 'gameover') {
+      console.log('EndGame already called, skipping...');
+      return;
+    }
+    
     // Store the final score before changing state
     console.log('End game - Current score:', gameStateRef.current.currentScore, 'Max height:', gameStateRef.current.maxHeight);
     console.log('PlayerAddress prop:', playerAddress);
@@ -904,7 +943,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     if (finalScore > 0 && currentPlayerAddress) {
       console.log('Attempting to submit score...');
       try {
-        const result = await submitPlayerScore(currentPlayerAddress, finalScore, 1);
+        const result = await submitPlayerScore(currentPlayerAddress, Math.floor(finalScore), 1);
         console.log('Score submission result:', result);
         
         if (result.success) {

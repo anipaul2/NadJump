@@ -1,12 +1,46 @@
 {
+  "accountAssociation": {
+    "header": "YOUR_HEADER_HERE",
+    "payload": "YOUR_PAYLOAD_HERE", 
+    "signature": "YOUR_SIGNATURE_HERE"
+  },
   "miniapp": {
     "version": "1",
     "name": "NadJump",
     "iconUrl": "https://nad-jump.vercel.app/game-icon.svg",
     "homeUrl": "https://nad-jump.vercel.app",
-    "splash_image_url": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
-    "buttonTitle": "Climb the Nad Jump Leaderboard",
     "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+    "screenshotUrls": [],
+    "tags": [
+      "monad",
+      "game",
+      "jump",
+      "leaderboard",
+      "mission7"
+    ],
+    "primaryCategory": "games",
+    "buttonTitle": "Climb the Nad Jump Leaderboard",
+    "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+    "splashBackgroundColor": "#836EF9",
     "description": "A fun jumping game built for Monad Games ID Mission 7 - compete on the leaderboard!"
+  },
+  "frame": {
+    "version": "1",
+    "name": "NadJump",
+    "iconUrl": "https://nad-jump.vercel.app/game-icon.svg",
+    "homeUrl": "https://nad-jump.vercel.app",
+    "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+    "screenshotUrls": [],
+    "tags": [
+      "monad",
+      "game", 
+      "jump",
+      "leaderboard",
+      "mission7"
+    ],
+    "primaryCategory": "games",
+    "buttonTitle": "Climb the Nad Jump Leaderboard with Monad Games ID",
+    "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+    "splashBackgroundColor": "#836EF9"
   }
 }

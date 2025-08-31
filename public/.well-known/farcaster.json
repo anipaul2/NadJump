@@ -9,7 +9,7 @@
     "name": "NadJump",
     "iconUrl": "https://nad-jump.vercel.app/monad-logo.svg",
     "homeUrl": "https://nad-jump.vercel.app/",
-    "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+    "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=800&width=1200",
     "screenshotUrls": [],
     "tags": [
       "monad",
@@ -22,10 +22,10 @@
     "button": {
       "title": "🎮 Play NadJump",
       "action": {
-        "type": "launch_frame",
+        "type": "launch_miniapp",
         "name": "NadJump",
         "url": "https://nad-jump.vercel.app/",
-        "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+        "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=800&width=1200",
         "splashBackgroundColor": "#836EF9"
       }
     },

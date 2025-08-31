@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   other: {
     // Farcaster Frame metadata
     "fc:frame": "vNext",
-    "fc:frame:image": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+    "fc:frame:image": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=800&width=1200",
     "fc:frame:button:1": "🎮 Play NadJump",
     "fc:frame:button:1:action": "link",
     "fc:frame:button:1:target": "https://nad-jump.vercel.app",
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     // Farcaster Miniapp metadata
     "fc:miniapp": JSON.stringify({
       "version": "1",
-      "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+      "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=800&width=1200",
       "button": {
         "title": "🎮 Play NadJump",
         "action": {
-          "type": "launch_frame",
+          "type": "launch_miniapp",
           "name": "NadJump", 
           "url": "https://nad-jump.vercel.app/",
-          "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+          "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=800&width=1200",
           "splashBackgroundColor": "#836EF9"
         }
       }

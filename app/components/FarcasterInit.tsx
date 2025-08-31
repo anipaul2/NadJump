@@ -5,6 +5,7 @@ import { sdk } from '@farcaster/miniapp-sdk';
 export default function FarcasterInit({ children }: { children: React.ReactNode }) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [readyCalled, setReadyCalled] = useState(false);
+  const [isInFarcaster, setIsInFarcaster] = useState(false);
 
   useEffect(() => {
     // Initialize SDK context
@@ -12,12 +13,20 @@ export default function FarcasterInit({ children }: { children: React.ReactNode 
       try {
         console.log('🚀 FarcasterInit: Loading SDK context...');
         await sdk.context;
-        console.log('✅ FarcasterInit: SDK context loaded');
+        console.log('✅ FarcasterInit: SDK context loaded - Running inside Farcaster');
         setIsSDKLoaded(true);
+        setIsInFarcaster(true);
+        
+        // Set global flag for other components
+        (window as any).isInFarcaster = true;
       } catch (error) {
-        console.error('❌ FarcasterInit: Error loading SDK context:', error);
+        console.error('❌ FarcasterInit: Error loading SDK context - Running outside Farcaster');
         // Still set as loaded to allow app to continue
         setIsSDKLoaded(true);
+        setIsInFarcaster(false);
+        
+        // Set global flag for other components  
+        (window as any).isInFarcaster = false;
       }
     };
 

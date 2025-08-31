@@ -4,7 +4,7 @@ A Farcaster miniapp game built for Monad Games ID integration. Jump through plat
 
 ## 🚀 Live Demo
 
-- **Game URL**: [Your Vercel URL]
+- **Game URL**: https://nad-jump.vercel.app/
 - **Leaderboard**: https://monad-games-id-site.vercel.app/leaderboard
 
 ## ✨ Features

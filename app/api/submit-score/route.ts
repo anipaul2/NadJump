@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createWalletClient, http } from 'viem';
 import { monadTestnet } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: 'Forbidden: Invalid origin' },
         403,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined || undefined
       );
     }
 
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: 'Missing required fields: playerAddress, score' },
         400,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined
       );
     }
 
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: 'Invalid player address format' },
         400,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined
       );
     }
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: 'Score and transaction amounts must be non-negative' },
         400,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined
       );
     }
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: `Amounts too large. Max score: ${MAX_SCORE_PER_REQUEST}, Max transactions: ${MAX_TRANSACTIONS_PER_REQUEST}` },
         400,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined
       );
     }
 
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: 'Server configuration error' },
         500,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined
       );
     }
 
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
       playerAddress,
       scoreSubmitted: score,
       transactionsSubmitted: transactions
-    }, 200, request.headers.get('origin'));
+    }, 200, request.headers.get('origin') || undefined);
 
   } catch (error) {
     console.error('Error submitting score:', error);
@@ -113,21 +113,21 @@ export async function POST(request: NextRequest) {
         return createAuthenticatedResponse(
           { error: 'Insufficient funds to complete transaction' },
           400,
-          request.headers.get('origin')
+          request.headers.get('origin') || undefined
         );
       }
       if (error.message.includes('execution reverted')) {
         return createAuthenticatedResponse(
           { error: 'Contract execution failed - check if wallet has GAME_ROLE permission' },
           400,
-          request.headers.get('origin')
+          request.headers.get('origin') || undefined
         );
       }
       if (error.message.includes('AccessControlUnauthorizedAccount')) {
         return createAuthenticatedResponse(
           { error: 'Unauthorized: Wallet does not have GAME_ROLE permission' },
           403,
-          request.headers.get('origin')
+          request.headers.get('origin') || undefined
         );
       }
     }
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
     return createAuthenticatedResponse(
       { error: 'Failed to submit score' },
       500,
-      request.headers.get('origin')
+      request.headers.get('origin') || undefined
     );
   }
 }

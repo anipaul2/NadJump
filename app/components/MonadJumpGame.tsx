@@ -588,7 +588,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       // Button detection
       if (x >= 20 && x <= 120 && y >= 20 && y <= 55) {
         // Leaderboard button (top left position)
-        window.open('https://monad-games-id-site.vercel.app/leaderboard', '_blank');
+        window.open('https://monad-games-id-site.vercel.app/leaderboard?page=1&gameId=236', '_blank');
       } else if (x >= GAME_WIDTH/2 - 100 && x <= GAME_WIDTH/2 + 100 && y >= 320 && y <= 370) {
         // Play button - only start if user is logged in
         if (playerAddressRef.current) {

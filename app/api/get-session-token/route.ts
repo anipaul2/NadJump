@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { generateSessionToken, validateOrigin, createAuthenticatedResponse } from '@/app/lib/auth';
 
 export async function POST(request: NextRequest) {
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: 'Forbidden: Invalid origin' },
         403,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined
       );
     }
 
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: 'Missing required fields: playerAddress, signedMessage, message' },
         400,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined
       );
     }
 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       return createAuthenticatedResponse(
         { error: 'Invalid message format' },
         400,
-        request.headers.get('origin')
+        request.headers.get('origin') || undefined
       );
     }
 
@@ -44,14 +44,14 @@ export async function POST(request: NextRequest) {
       success: true,
       sessionToken,
       expiresAt: timestamp + 300000, // 5 minutes from token timestamp
-    }, 200, request.headers.get('origin'));
+    }, 200, request.headers.get('origin') || undefined);
 
   } catch (error) {
     console.error('Error generating session token:', error);
     return createAuthenticatedResponse(
       { error: 'Failed to generate session token' },
       500,
-      request.headers.get('origin')
+      request.headers.get('origin') || undefined
     );
   }
 }

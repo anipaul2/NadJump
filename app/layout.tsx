@@ -27,21 +27,21 @@ export const metadata: Metadata = {
   other: {
     // Farcaster Frame metadata
     "fc:frame": "vNext",
-    "fc:frame:image": "/monad-logo.svg",
+    "fc:frame:image": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
     "fc:frame:button:1": "🎮 Play NadJump",
     "fc:frame:button:1:action": "link",
-    "fc:frame:button:1:target": "https://your-app-url.vercel.app",
+    "fc:frame:button:1:target": "https://nad-jump.vercel.app",
     
     // Farcaster Miniapp metadata
     "fc:miniapp": JSON.stringify({
       "version": "1",
       "name": "NadJump",
-      "iconUrl": "/monad-logo.svg",
-      "homeUrl": "https://your-app-url.vercel.app",
-      "imageUrl": "/monad-logo.svg",
-      "description": "Jump through platforms and compete on the Monad Games leaderboard!",
+      "iconUrl": "https://nad-jump.vercel.app/monad-logo.svg",
+      "homeUrl": "https://nad-jump.vercel.app",
+      "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+      "description": "A fun jumping game built for Monad Games ID Mission 7 - compete on the leaderboard!",
       "button": {
-        "title": "🎮 Play Now",
+        "title": "🎮 Play NadJump",
         "action": {
           "type": "launch_miniapp"
         }

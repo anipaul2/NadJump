@@ -380,14 +380,18 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
     ctx.textAlign = 'center';
     ctx.fillStyle = '#4B5563';
     ctx.font = 'bold 14px Arial';
-    ctx.fillText('🏆 Login for leaderboard • 📱 Instant play', GAME_WIDTH / 2, 245);
+    ctx.fillText('🏆 Login for leaderboard • 📱 Instant play', GAME_WIDTH / 2, 240);
     
     ctx.fillStyle = '#6B7280';
     ctx.font = '12px Arial';
-    ctx.fillText('💡 Farcaster mobile: Just play & enjoy!', GAME_WIDTH / 2, 260);
+    ctx.fillText('💡 Farcaster mobile: Just play & enjoy!', GAME_WIDTH / 2, 255);
+
+    ctx.fillStyle = '#4B5563';
+    ctx.font = 'bold 12px Arial';
+    ctx.fillText('👆 Tap left and right for movements', GAME_WIDTH / 2, 275);
 
     // Play button - always show, works for everyone
-    const playBtn = { x: GAME_WIDTH/2 - 75, y: 290, width: 150, height: 40 };
+    const playBtn = { x: GAME_WIDTH/2 - 75, y: 295, width: 150, height: 40 };
     const isPlayHover = buttonHover === 1;
     
     drawGradientRect(ctx, playBtn.x, playBtn.y, playBtn.width, playBtn.height,
@@ -590,7 +594,7 @@ export default function MonadJumpGame({ playerAddress }: MonadJumpGameProps) {
       if (x >= 20 && x <= 120 && y >= 20 && y <= 55) {
         // Leaderboard button (top left position)
         window.open('https://monad-games-id-site.vercel.app/leaderboard?page=1&gameId=236', '_blank');
-      } else if (x >= GAME_WIDTH/2 - 75 && x <= GAME_WIDTH/2 + 75 && y >= 290 && y <= 330) {
+      } else if (x >= GAME_WIDTH/2 - 75 && x <= GAME_WIDTH/2 + 75 && y >= 295 && y <= 335) {
         // Play button - always allow playing
         startGame();
       }

@@ -9,7 +9,7 @@
     "name": "NadJump",
     "iconUrl": "https://nad-jump.vercel.app/monad-logo.svg",
     "homeUrl": "https://nad-jump.vercel.app/",
-    "imageUrl": "https://miro.medium.com/v2/resize:fit:4800/format:webp/1*vsb_NQTH7xE5Y6TAfuAlNQ.jpeg",
+    "imageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
     "screenshotUrls": [],
     "tags": [
       "monad",
@@ -19,9 +19,16 @@
       "mission7"
     ],
     "primaryCategory": "games",
-    "buttonTitle": "🎮 Play NadJump",
-    "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
-    "splashBackgroundColor": "#836EF9",
+    "button": {
+      "title": "🎮 Play NadJump",
+      "action": {
+        "type": "launch_frame",
+        "name": "NadJump",
+        "url": "https://nad-jump.vercel.app/",
+        "splashImageUrl": "https://images.mirror-media.xyz/publication-images/lfQW4WaW_6wEX_2sS2m3n.jpeg?height=506&width=1012",
+        "splashBackgroundColor": "#836EF9"
+      }
+    },
     "description": "A fun jumping game built for Monad Games ID Mission 7 - compete on the leaderboard!",
     "webhookUrl": "https://nad-jump.vercel.app/api/webhook"
   }
